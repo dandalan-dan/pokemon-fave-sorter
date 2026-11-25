@@ -1,0 +1,604 @@
+/* ============================================================
+   POKÉSORT – style.css
+   Aesthetic: Retro Game Card / Pokémon-inspired
+   ============================================================ */
+
+:root {
+  --red:     #E3350D;
+  --red-dk:  #b02508;
+  --yellow:  #FFCB05;
+  --yellow-lt: #ffe566;
+  --blue:    #3B4CCA;
+  --blue-lt: #5a6de8;
+  --white:   #FAFAFA;
+  --off-white: #f0ede6;
+  --dark:    #1a1a2e;
+  --dark2:   #16213e;
+  --card-bg: #ffffff;
+  --text:    #1a1a2e;
+  --text-muted: #6b6b8a;
+  --shadow:  0 8px 32px rgba(0,0,0,0.18);
+  --radius:  18px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--dark);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ---- SCREENS ---- */
+.screen {
+  display: none;
+  min-height: 100vh;
+  animation: fadeIn 0.4s ease;
+}
+.screen.active { display: flex; flex-direction: column; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ================================================
+   LANDING SCREEN
+   ================================================ */
+#screen-landing {
+  background: var(--dark2);
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+.landing-bg {
+  position: absolute; inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.pokeball-deco {
+  position: absolute;
+  border-radius: 50%;
+  border: 18px solid rgba(255,255,255,0.04);
+}
+.pb1 { width: 420px; height: 420px; top: -120px; right: -100px; border-color: rgba(227,53,13,0.12); }
+.pb2 { width: 280px; height: 280px; bottom: -60px; left: -80px; border-color: rgba(255,203,5,0.1); }
+.pb3 { width: 180px; height: 180px; top: 40%; left: 10%; border-color: rgba(59,76,202,0.1); }
+
+.landing-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+/* Logo */
+.logo-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(28px, 6vw, 52px);
+  line-height: 1.1;
+  text-align: center;
+}
+.logo-poke { color: var(--yellow); }
+.logo-sort { color: var(--white); }
+
+.logo-sub {
+  font-size: 14px;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  margin-top: -16px;
+  color: rgba(255,255,255,0.45);
+}
+
+/* Filter Box */
+.filter-box {
+  background: rgba(255,255,255,0.05);
+  border: 1.5px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  width: 100%;
+  backdrop-filter: blur(8px);
+}
+
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.filter-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: var(--yellow);
+  letter-spacing: 0.05em;
+}
+
+.filter-actions { display: flex; gap: 8px; }
+
+.filter-btn {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.7);
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-btn:hover {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+}
+
+.gen-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.gen-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  transition: all 0.2s;
+  user-select: none;
+}
+.gen-item:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,203,5,0.3); }
+.gen-item.checked {
+  background: rgba(255,203,5,0.12);
+  border-color: rgba(255,203,5,0.5);
+}
+
+.gen-item input[type="checkbox"] { display: none; }
+
+.gen-check-box {
+  width: 16px; height: 16px;
+  border-radius: 4px;
+  border: 2px solid rgba(255,255,255,0.3);
+  background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.gen-item.checked .gen-check-box {
+  background: var(--yellow);
+  border-color: var(--yellow);
+}
+.gen-check-box::after {
+  content: '';
+  display: none;
+  width: 8px; height: 5px;
+  border-left: 2px solid var(--dark);
+  border-bottom: 2px solid var(--dark);
+  transform: rotate(-45deg) translateY(-1px);
+}
+.gen-item.checked .gen-check-box::after { display: block; }
+
+.gen-label {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.gen-label-main {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  color: var(--yellow);
+}
+.gen-label-sub {
+  font-size: 9px;
+  color: rgba(255,255,255,0.4);
+  font-weight: 600;
+}
+
+/* Count Label */
+.pokemon-count-label {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* Start Button */
+.btn-start {
+  background: linear-gradient(135deg, var(--red), var(--red-dk));
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 18px 52px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(227,53,13,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.03em;
+}
+.btn-start::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transition: left 0.4s;
+}
+.btn-start:hover::before { left: 100%; }
+.btn-start:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 32px rgba(227,53,13,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.btn-start:disabled {
+  background: linear-gradient(135deg, #555, #333);
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ================================================
+   SORT SCREEN
+   ================================================ */
+#screen-sort {
+  background: var(--off-white);
+  min-height: 100vh;
+}
+
+.sort-header {
+  background: var(--dark2);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 3px solid var(--yellow);
+}
+
+.sort-logo {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  color: var(--yellow);
+  white-space: nowrap;
+}
+
+.sort-progress-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sort-progress-bar {
+  flex: 1;
+  height: 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--yellow), var(--yellow-lt));
+  border-radius: 20px;
+  width: 0%;
+  transition: width 0.4s ease;
+}
+
+.progress-text {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: var(--yellow);
+  min-width: 36px;
+  text-align: right;
+}
+
+.ctrl-btn {
+  background: rgba(255,255,255,0.08);
+  border: 1.5px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.8);
+  border-radius: 10px;
+  padding: 7px 14px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.ctrl-btn:hover { background: rgba(255,255,255,0.14); color: #fff; }
+
+/* Arena */
+.sort-arena {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 32px 16px;
+  position: relative;
+  min-height: calc(100vh - 130px);
+}
+
+.versus-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 22px;
+  color: var(--red);
+  background: var(--off-white);
+  padding: 10px 14px;
+  border-radius: 50%;
+  border: 3px solid var(--red);
+  z-index: 10;
+  pointer-events: none;
+  box-shadow: 0 4px 16px rgba(227,53,13,0.3);
+}
+
+/* Pokemon Cards */
+.pokemon-card {
+  background: var(--card-bg);
+  border: none;
+  border-radius: 24px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.14);
+  cursor: pointer;
+  padding: 24px;
+  width: min(300px, 42vw);
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+}
+.pokemon-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--red), var(--yellow));
+}
+.pokemon-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.22);
+}
+.pokemon-card:active { transform: translateY(-2px) scale(0.98); }
+
+.card-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.poke-img {
+  width: clamp(100px, 20vw, 180px);
+  height: clamp(100px, 20vw, 180px);
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15));
+  transition: transform 0.2s;
+}
+.pokemon-card:hover .poke-img { transform: scale(1.08) translateY(-4px); }
+
+.poke-number {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: var(--text-muted);
+}
+
+.poke-name {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  color: var(--text);
+  text-align: center;
+  line-height: 1.5;
+}
+
+.poke-gen {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--blue-lt);
+  background: rgba(59,76,202,0.1);
+  padding: 2px 10px;
+  border-radius: 20px;
+}
+
+.card-pick-hint {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+kbd {
+  background: var(--dark);
+  color: var(--yellow);
+  border-radius: 5px;
+  padding: 2px 7px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.3);
+}
+
+.mid-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  flex-shrink: 0;
+}
+
+.tie-btn {
+  display: none; /* hidden in the middle – only in header */
+}
+
+.sort-hint {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 12px 16px 20px;
+  font-weight: 700;
+}
+
+/* ================================================
+   RESULTS SCREEN
+   ================================================ */
+#screen-results {
+  background: var(--dark2);
+  padding: 32px 16px 60px;
+  align-items: center;
+}
+
+.results-header {
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.results-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(12px, 3vw, 18px);
+  color: var(--yellow);
+  line-height: 1.5;
+}
+
+.results-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.action-btn {
+  background: rgba(255,255,255,0.08);
+  border: 1.5px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.8);
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.action-btn:hover { background: rgba(255,255,255,0.14); color: #fff; }
+.action-btn.primary {
+  background: linear-gradient(135deg, var(--red), var(--red-dk));
+  border-color: var(--red);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(227,53,13,0.35);
+}
+.action-btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(227,53,13,0.45);
+}
+
+.results-list {
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.result-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255,255,255,0.05);
+  border: 1.5px solid rgba(255,255,255,0.07);
+  border-radius: 14px;
+  padding: 10px 18px;
+  animation: slideIn 0.3s ease both;
+}
+.result-row:nth-child(1)  { border-color: rgba(255,203,5,0.6); background: rgba(255,203,5,0.1); }
+.result-row:nth-child(2)  { border-color: rgba(192,192,192,0.5); background: rgba(192,192,192,0.07); }
+.result-row:nth-child(3)  { border-color: rgba(205,127,50,0.5); background: rgba(205,127,50,0.07); }
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.result-rank {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: var(--yellow);
+  min-width: 32px;
+  text-align: center;
+}
+.result-row:nth-child(1) .result-rank { color: #FFD700; font-size: 12px; }
+.result-row:nth-child(2) .result-rank { color: #C0C0C0; }
+.result-row:nth-child(3) .result-rank { color: #CD7F32; }
+
+.result-img {
+  width: 48px; height: 48px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.result-info { flex: 1; }
+.result-name {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: #fff;
+  line-height: 1.5;
+}
+.result-meta {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+/* ---- CRITERIA GRID ---- */
+.criteria-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+/* Disabled / mutually-exclusive items */
+.gen-item.disabled {
+  opacity: 0.35;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+/* Exclusive-mode highlight (e.g. Starters Only / Finals Only) */
+.gen-item.exclusive {
+  border-color: rgba(227,53,13,0.55) !important;
+  background: rgba(227,53,13,0.1) !important;
+}
+.gen-item.exclusive .gen-check-box {
+  background: var(--red) !important;
+  border-color: var(--red) !important;
+}
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 520px) {
+  .sort-arena { gap: 0; padding: 20px 6px; }
+  .pokemon-card { padding: 14px; border-radius: 16px; width: 44vw; min-width: 150px; }
+  .versus-label { font-size: 14px; padding: 7px 9px; }
+  .card-pick-hint { font-size: 9px; }
+  .gen-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .criteria-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .gen-item { padding: 8px 8px; }
+  .gen-label-main { font-size: 6px; }
+}

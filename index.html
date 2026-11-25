@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pokémon Sorter</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- ===== LANDING SCREEN ===== -->
+  <div id="screen-landing" class="screen active">
+    <div class="landing-bg">
+      <div class="pokeball-deco pb1"></div>
+      <div class="pokeball-deco pb2"></div>
+      <div class="pokeball-deco pb3"></div>
+    </div>
+
+    <div class="landing-content">
+      <h1 class="logo-title">
+        <span class="logo-poke">Poké</span><span class="logo-sort">Sort</span>
+      </h1>
+      <p class="logo-sub">Who is your favourite Pokémon?</p>
+
+      <!-- Generation Filter -->
+      <div class="filter-box">
+        <div class="filter-header">
+          <span class="filter-title">Select Generations</span>
+          <div class="filter-actions">
+            <button id="btn-all" class="filter-btn">All</button>
+            <button id="btn-none" class="filter-btn">None</button>
+          </div>
+        </div>
+        <div class="gen-grid" id="gen-checkboxes">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+
+      <!-- Criteria Filter -->
+      <div class="filter-box">
+        <div class="filter-header">
+          <span class="filter-title">Criteria Filters</span>
+        </div>
+        <div class="criteria-grid">
+
+          <!-- Row 1: Mythical / Legendary -->
+          <label class="gen-item checked" id="ci-mythical">
+            <input type="checkbox" id="cb-mythical" checked />
+            <div class="gen-check-box"></div>
+            <div class="gen-label">
+              <span class="gen-label-main">Mythical</span>
+              <span class="gen-label-sub">Include mythicals</span>
+            </div>
+          </label>
+
+          <label class="gen-item checked" id="ci-legendary">
+            <input type="checkbox" id="cb-legendary" checked />
+            <div class="gen-check-box"></div>
+            <div class="gen-label">
+              <span class="gen-label-main">Legendary</span>
+              <span class="gen-label-sub">Include legendaries</span>
+            </div>
+          </label>
+
+          <label class="gen-item" id="ci-starters">
+            <input type="checkbox" id="cb-starters" />
+            <div class="gen-check-box"></div>
+            <div class="gen-label">
+              <span class="gen-label-main">Starters</span>
+              <span class="gen-label-sub">Starters only</span>
+            </div>
+          </label>
+
+          <!-- Row 2: Evolution stages -->
+          <label class="gen-item checked" id="ci-stage1">
+            <input type="checkbox" id="cb-stage1" checked />
+            <div class="gen-check-box"></div>
+            <div class="gen-label">
+              <span class="gen-label-main">① Stage 1</span>
+              <span class="gen-label-sub">Base / first stage</span>
+            </div>
+          </label>
+
+          <label class="gen-item checked" id="ci-stage2">
+            <input type="checkbox" id="cb-stage2" checked />
+            <div class="gen-check-box"></div>
+            <div class="gen-label">
+              <span class="gen-label-main">② Stage 2</span>
+              <span class="gen-label-sub">Middle stage</span>
+            </div>
+          </label>
+
+          <label class="gen-item" id="ci-finalonly">
+            <input type="checkbox" id="cb-finalonly" />
+            <div class="gen-check-box"></div>
+            <div class="gen-label">
+              <span class="gen-label-main">Finals</span>
+              <span class="gen-label-sub">Final stage only</span>
+            </div>
+          </label>
+
+        </div>
+      </div>
+
+      <div class="pokemon-count-label" id="pokemon-count-label">0 Pokémon selected</div>
+
+      <button id="btn-start" class="btn-start" disabled>
+        <span>▶ Start Sorting!</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== SORT SCREEN ===== -->
+  <div id="screen-sort" class="screen">
+    <header class="sort-header">
+      <span class="sort-logo">PokéSort</span>
+      <div class="sort-progress-wrap">
+        <div class="sort-progress-bar">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+        <span id="progress-text" class="progress-text">0%</span>
+      </div>
+      <button id="btn-undo" class="ctrl-btn" title="Undo (Z)">↩ Undo</button>
+    </header>
+
+    <div class="sort-arena">
+      <div class="versus-label">VS</div>
+
+      <button class="pokemon-card" id="card-left" onclick="pick(0)">
+        <div class="card-inner">
+          <img id="img-left" src="" alt="" class="poke-img"/>
+          <div class="poke-number" id="num-left">#000</div>
+          <div class="poke-name" id="name-left">???</div>
+          <div class="poke-gen" id="gen-left">Gen ?</div>
+        </div>
+        <div class="card-pick-hint">← Pick  <kbd>A</kbd></div>
+      </button>
+
+      <div class="mid-controls">
+        <button id="btn-tie" class="ctrl-btn tie-btn" onclick="tie()" title="Tie (T)">
+          ≈ Tie
+        </button>
+      </div>
+
+      <button class="pokemon-card" id="card-right" onclick="pick(1)">
+        <div class="card-inner">
+          <img id="img-right" src="" alt="" class="poke-img"/>
+          <div class="poke-number" id="num-right">#000</div>
+          <div class="poke-name" id="name-right">???</div>
+          <div class="poke-gen" id="gen-right">Gen ?</div>
+        </div>
+        <div class="card-pick-hint"><kbd>D</kbd>  Pick →</div>
+      </button>
+    </div>
+
+    <div class="sort-hint">
+      Keyboard: <kbd>A</kbd> Left &nbsp;|&nbsp; <kbd>D</kbd> Right &nbsp;|&nbsp; <kbd>T</kbd> Tie &nbsp;|&nbsp; <kbd>Z</kbd> Undo
+    </div>
+  </div>
+
+  <!-- ===== RESULTS SCREEN ===== -->
+  <div id="screen-results" class="screen">
+    <div class="results-header">
+      <h2 class="results-title">Your Pokémon Rankings!</h2>
+      <div class="results-actions">
+        <button id="btn-copy" class="action-btn">📋 Copy List</button>
+        <button id="btn-restart" class="action-btn primary">🔄 Sort Again</button>
+      </div>
+    </div>
+    <div id="results-list" class="results-list"></div>
+  </div>
+
+  <script src="js/sorter.js"></script>
+</body>
+</html>
